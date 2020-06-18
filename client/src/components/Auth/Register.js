@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, Redirect } from 'react-router-dom';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Container from "react-bootstrap/Container";
@@ -35,6 +35,14 @@ const Register = (props) => {
                 password
             });
         }
+    }
+
+    useEffect(() => {
+        console.log('Inside register useEffect');
+    }, [])
+
+    if (props.isAuthenticated) {
+        return <Redirect to="/dashboard" />
     }
 
     return (
@@ -117,6 +125,12 @@ const Register = (props) => {
 Register.propTypes = {
     setAlert: PropTypes.func.isRequired,
     register: PropTypes.func.isRequired,
+    isAuthenticated: PropTypes.bool,
 };
 
-export default connect(null, { setAlert, register })(Register);
+const mapStateToProps = state => ({
+    isAuthenticated: state.auth.isAuthenticated
+});
+
+
+export default connect(mapStateToProps, { setAlert, register })(Register);

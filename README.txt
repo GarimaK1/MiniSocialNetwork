@@ -10,6 +10,25 @@ dependency added to manage global variables
 
 -- Set body to 100vh, landing to 90vh to prevent scrolling
 
+-- Hiding Landing Page if user is authenticated/logged in
+
+-- Login page: if user is authenticted, don't show login. Redirect to dashboard '/dashboard'.
+
+-- Register page: if user is authenticted, don't show register. Redirect to dashboard '/dashboard'.
+
+-- mapStateToProps is an arrow function and needs to return part of state to be provided as props to component
+
+-- In this app, registering a user returns a token. So that user is logged in automatically.
+So registered user = authenticated user = logged-in user 
+
+-- Why we use loadUser() in register and login actions?
+First use of auth.user is in profile.
+Answer: loadUser() sets the currently authenticated user into state. So on login/register, user
+is logged in but user hasn't created a profile yet. So profile.user doesn't exist. 
+So we can't get user info from profile. So we must have user in state too.
+
+-- Remember to clear profile before logout.
+
 -- Note:
 mongoose-unique-validator dependency has been added to project and in models/User.js
 But not used because response pattern was different. 
@@ -74,7 +93,39 @@ So we control when the action is dispatched.
 There are a lot of moving parts to the redux ecosystem, redux, react-redux, thunk, but on it's own redux is fairly straight forward. It does take a lot of time with it to 'get' it but it is worth it.
 I hope that helps and doesn't confuse you further.
 ===============================================================================================================
+-- Redundant  setAuthToken(localStorage.token)
+Why are we putting the following block of code in both App.js and loadUser()?
+Isn't that redundant as the App will call the loadUser action on useEffect?
 
+if(localStorage.token){
+  setAuthToken(localStorage.token)
+}
+
+Answer) As we add more components (and more useEffect calls), there will be a wider and wider gap between 
+these two portions of the code in App.js:
+
+if (localStorage.token) {
+    setAuthToken(localStorage.token);
+}
+
+and this:
+
+useEffect(() => {
+    store.dispatch(loadUser());
+}, []);
+
+The key takeaway here is that all child components' useEffect methods are invoked prior to the parent 
+(i.e. App.js).
+
+For example, output of console.log in order:
+App.js:23 executing setAuthToken in App.js
+Register.js:41 Inside register useEffect 
+App.js:30 useEffect in App.js, loadUser.
+
+Situation: Suppose we need token in Register.js. As we see, useEffect of Register (child component) is 
+called before useEffect of App.js (parent component). We need token to already be set to make auth calls.
+So, set it separately above the App.js component. It will be executed as soon as App is loaded, before useEffect.
+===============================================================================================================
 -- Note:
 mongoose-unique-validator dependency has been added to project and in models/User.js
 But not used because response pattern was different. 
