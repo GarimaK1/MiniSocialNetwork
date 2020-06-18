@@ -1,6 +1,6 @@
 const express = require('express');
 const morgan = require('morgan');
-const connectDB = require('./config/db');
+const connectDB = require('./db');
 const usersRoute = require('./routes/users');
 const postsRoute = require('./routes/posts');
 const profileRoute = require('./routes/profile');

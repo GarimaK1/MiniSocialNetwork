@@ -8,6 +8,17 @@ dependency added to manage global variables
 
 -- Set body to 100vh, landing to 90vh to prevent scrolling
 
+-- Note:
+mongoose-unique-validator dependency has been added to project and in models/User.js
+But not used because response pattern was different. 
+Pattern in project: json({ errors: [{ msg: 'User already exists!'}] })
+Would have to use: json({ errors: [{ msg: error.errors.email.properties.message }] });
+Instead, manually checked if user exists in routes/users.js
+
+-- Note:
+In AdvanceCabBooking, user is not automatically logged in on sign-up.
+On first page load, we see 401 Unauth error in dev console. Normal i think.
+===============================================================================================================
 -- how we have access to "dispatch" in components and actions?
 Ans) Using react-redux and redux-thunk
 Here, 'connect'ed = react component that uses connect function of react-redux
@@ -59,15 +70,4 @@ functionYouGaveThunk(store.dispatch)
 So we control when the action is dispatched.
 There are a lot of moving parts to the redux ecosystem, redux, react-redux, thunk, but on it's own redux is fairly straight forward. It does take a lot of time with it to 'get' it but it is worth it.
 I hope that helps and doesn't confuse you further.
-
-
--- Note:
-mongoose-unique-validator dependency has been added to project and in models/User.js
-But not used because response pattern was different. 
-Pattern in project: json({ errors: [{ msg: 'User already exists!'}] })
-Would have to use: json({ errors: [{ msg: error.errors.email.properties.message }] });
-Instead, manually checked if user exists in routes/users.js
-
--- Note:
-In AdvanceCabBooking, user is not automatically logged in on sign-up.
-On first page load, we see 401 Unauth error in dev console. Normal i think.
+===============================================================================================================
