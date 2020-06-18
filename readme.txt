@@ -1,3 +1,5 @@
+Part of udemy course "MERN Stack Front To Back" by Brad Traversy. This is a fully functional project, coded along with course. 
+
 -- config:
 dependency added to manage global variables
 
